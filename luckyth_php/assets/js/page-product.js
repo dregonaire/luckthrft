@@ -100,7 +100,7 @@ function renderProduct(p) {
         thumbs.innerHTML = p.images.map((img, i) => `
             <button onclick="setImage(${i})" id="thumb-${i}"
                 class="w-16 h-16 rounded-xl overflow-hidden border-2 transition-all shrink-0 ${i === 0 ? 'border-orange' : 'border-slate-200'} hover:border-orange">
-                <img src="${img}" class="w-full h-full object-cover">
+                <img src="${fixImgUrl(img)}" class="w-full h-full object-cover">
             </button>`).join('');
     } else {
         thumbs.classList.add('hidden');
@@ -116,7 +116,7 @@ function renderProduct(p) {
 function setImage(idx) {
     if (!_product?.images?.length) return;
     _imgIdx = idx;
-    document.getElementById('prod-main-img').src = _product.images[idx];
+    document.getElementById('prod-main-img').src = fixImgUrl(_product.images[idx]);
     document.querySelectorAll('[id^="thumb-"]').forEach((el, i) => {
         el.classList.toggle('border-orange',    i === idx);
         el.classList.toggle('border-slate-200', i !== idx);

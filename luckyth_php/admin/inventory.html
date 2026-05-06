@@ -146,7 +146,7 @@ async function loadInventory() {
             <tr class="hover:bg-slate-50">
                 <td class="px-6 py-4">
                     <div class="flex items-center gap-4">
-                        <img src="${p.images?.[0] || ''}" class="w-12 h-12 rounded-xl object-cover border border-slate-100 bg-slate-100">
+                        <img src="${fixImgUrl(p.images?.[0] || '')}" class="w-12 h-12 rounded-xl object-cover border border-slate-100 bg-slate-100">
                         <div>
                             <p class="font-bold text-navy">${p.name}</p>
                             <p class="text-xs text-slate-400">${p.category} · ${(p.description || '').substring(0,45)}…</p>
@@ -256,7 +256,7 @@ function updatePreview() {
     if (!urls.length) { strip.classList.add('hidden'); return; }
     strip.classList.remove('hidden');
     container.innerHTML = urls.map(url =>
-        `<img src="${url}" class="w-16 h-16 rounded-xl object-cover border-2 border-slate-200 bg-slate-100" onerror="this.style.opacity=0.3">`
+        `<img src="${fixImgUrl(url)}" class="w-16 h-16 rounded-xl object-cover border-2 border-slate-200 bg-slate-100" onerror="this.style.opacity=0.3">`
     ).join('');
 }
 

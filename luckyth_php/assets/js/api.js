@@ -1,5 +1,27 @@
 const API_BASE = '/api/index.php?endpoint=';
 
+/**
+ * Converts any Google Drive URL to the thumbnail endpoint which works
+ * reliably as an <img> src (no CORS issues, no virus-scan redirect).
+ * Non-Drive URLs are returned unchanged.
+ *
+ * Handles:
+ *   drive.google.com/file/d/{ID}/view...
+ *   drive.google.com/uc?export=view&id={ID}
+ *   drive.google.com/uc?id={ID}
+ *   drive.google.com/open?id={ID}
+ *   drive.google.com/thumbnail?id={ID}   ← already correct, just ensure sz
+ */
+function fixImgUrl(url) {
+    if (!url) return url;
+    if (!url.includes('drive.google.com')) return url;
+    // Extract ID from /file/d/{ID}/
+    let m = url.match(/\/file\/d\/([a-zA-Z0-9_-]+)/);
+    if (!m) m = url.match(/[?&]id=([a-zA-Z0-9_-]+)/);
+    if (!m) return url;
+    return `https://drive.google.com/thumbnail?id=${m[1]}&sz=w1000`;
+}
+
 async function apiFetch(endpoint, method = 'GET', body = null) {
     const opts = {
         method,

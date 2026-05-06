@@ -26,7 +26,7 @@ function renderGrid(products) {
 }
 
 function productCard(p) {
-    const img = p.images?.[0] || '';
+    const img = fixImgUrl(p.images?.[0] || '');
     return `
     <a href="/products/product.html?id=${p.id}"
        class="bg-white rounded-[2rem] overflow-hidden border-2 border-slate-100 hover:border-orange transition-all duration-300 group block">
