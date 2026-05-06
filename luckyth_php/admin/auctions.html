@@ -183,7 +183,7 @@ function updateCounts() {
 
 function fmtTime(t) {
     if (!t) return '—';
-    const d = new Date(t.replace(' ', 'T'));
+    const d = new Date(t.replace(' ', 'T') + 'Z');
     return d.toLocaleString([], { month:'short', day:'numeric', hour:'numeric', minute:'2-digit' });
 }
 
@@ -294,9 +294,14 @@ function editAuction(id) {
 
 function toDatetimeLocal(t) {
     if (!t) return '';
-    const d = new Date(t.replace(' ', 'T'));
+    const d = new Date(t.replace(' ', 'T') + 'Z');
     const pad = n => String(n).padStart(2, '0');
     return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
+}
+
+function localToUTC(val) {
+    if (!val) return null;
+    return new Date(val).toISOString().replace('T', ' ').slice(0, 19);
 }
 
 async function saveAuction(e) {
@@ -308,8 +313,8 @@ async function saveAuction(e) {
         category:       document.getElementById('f-category').value,
         starting_price: parseFloat(document.getElementById('f-start-price').value) || 0,
         bid_increment:  parseFloat(document.getElementById('f-increment').value)   || 0,
-        start_time:     document.getElementById('f-start-time').value || null,
-        end_time:       document.getElementById('f-end-time').value   || null,
+        start_time:     localToUTC(document.getElementById('f-start-time').value),
+        end_time:       localToUTC(document.getElementById('f-end-time').value),
         images:         document.getElementById('f-images').value.split('\n').map(s => s.trim()).filter(Boolean),
     };
     try {

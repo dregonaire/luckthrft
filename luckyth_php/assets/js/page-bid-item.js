@@ -95,11 +95,11 @@ function renderDetail(a) {
     if (a.status === 'live' && a.end_time) {
         timerBlock.classList.remove('hidden');
         document.getElementById('timer-label').textContent = 'Auction Ends In';
-        startTimer(new Date(a.end_time.replace(' ', 'T')));
+        startTimer(new Date(a.end_time.replace(' ', 'T') + 'Z'));
     } else if (a.status === 'scheduled' && a.start_time) {
         timerBlock.classList.remove('hidden');
         document.getElementById('timer-label').textContent = 'Bidding Opens In';
-        startTimer(new Date(a.start_time.replace(' ', 'T')));
+        startTimer(new Date(a.start_time.replace(' ', 'T') + 'Z'));
     } else {
         timerBlock.classList.add('hidden');
     }
@@ -198,7 +198,7 @@ function renderHistory(bids) {
         return;
     }
     el.innerHTML = bids.map((b, i) => {
-        const when = new Date(b.created_at.replace(' ', 'T')).toLocaleString([], {
+        const when = new Date(b.created_at.replace(' ', 'T') + 'Z').toLocaleString([], {
             month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit'
         });
         const isTop = i === 0;
