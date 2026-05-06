@@ -17,6 +17,21 @@ async function initAdmin() {
         btn.classList.toggle('active',       isActive);
         btn.classList.toggle('text-slate-300', !isActive);
     });
+    // Poll for unread customer messages on all admin pages (updates sidebar badge)
+    await pollAdminUnread();
+    setInterval(pollAdminUnread, 15000);
+}
+
+async function pollAdminUnread() {
+    try {
+        const data  = await API.adminGetChats();
+        const convs = data.conversations || [];
+        const total = convs.reduce((s, c) => s + (c.unread || 0), 0);
+        const badge = document.getElementById('sidebar-msg-badge');
+        if (!badge) return;
+        badge.textContent = total > 9 ? '9+' : total;
+        badge.classList.toggle('hidden', total === 0);
+    } catch(e) {}
 }
 
 async function adminLogout() {

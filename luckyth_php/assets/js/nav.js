@@ -226,7 +226,21 @@ async function bootPage() {
             const chatRoot = document.createElement('div');
             chatRoot.id = 'chat-widget-root';
             document.body.appendChild(chatRoot);
-            await loadInclude('chat-widget-root', BASE + '/includes/chat-widget.html');
+            // Fetch widget HTML and inject without the <script> tag (innerHTML won't execute it)
+            try {
+                const res  = await fetch(BASE + '/includes/chat-widget.html');
+                const html = await res.text();
+                // Strip the script tag from the HTML (we'll load it properly below)
+                chatRoot.innerHTML = html.replace(/<script[^>]*>[\s\S]*?<\/script>/gi, '');
+            } catch(e) { console.warn('Could not load chat widget:', e); }
+            // Load chat.js as a real <script> element so it executes
+            await new Promise((resolve) => {
+                const s = document.createElement('script');
+                s.src = BASE + '/assets/js/chat.js';
+                s.onload  = resolve;
+                s.onerror = resolve;
+                document.body.appendChild(s);
+            });
             if (typeof initChatWidget === 'function') initChatWidget();
         }
         // Signal all page scripts that nav + auth are ready
