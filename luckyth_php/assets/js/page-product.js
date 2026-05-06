@@ -25,7 +25,8 @@ document.addEventListener('DOMContentLoaded', async () => {
 });
 
 document.addEventListener('pageReady', () => {
-    const productId = parseInt(document.body.dataset.productId);
+    const productId = parseInt(document.body.dataset.productId)
+        || parseInt(new URLSearchParams(location.search).get('id'));
     if (productId) loadProduct(productId);
 });
 

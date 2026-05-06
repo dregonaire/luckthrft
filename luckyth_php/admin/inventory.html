@@ -22,10 +22,16 @@
                 <h1 class="text-3xl font-black text-navy">Inventory Management</h1>
                 <p class="text-sm text-slate-400 font-bold mt-1">Edit stock levels directly in the table. Click Edit to update images, price, or description.</p>
             </div>
-            <button id="refresh-btn" onclick="refreshInventory()" title="Refresh"
-                class="flex items-center gap-2 bg-white border-2 border-slate-200 hover:border-navy text-navy px-4 py-2 rounded-xl font-bold text-sm transition-colors shadow-sm">
-                <i data-lucide="refresh-cw" id="refresh-icon" class="w-4 h-4"></i> Refresh
-            </button>
+            <div class="flex gap-2">
+                <button onclick="openNewModal()"
+                    class="flex items-center gap-2 bg-orange hover:bg-orange/90 text-white px-4 py-2 rounded-xl font-bold text-sm transition-colors shadow-sm">
+                    <i data-lucide="plus" class="w-4 h-4"></i> New Product
+                </button>
+                <button id="refresh-btn" onclick="refreshInventory()" title="Refresh"
+                    class="flex items-center gap-2 bg-white border-2 border-slate-200 hover:border-navy text-navy px-4 py-2 rounded-xl font-bold text-sm transition-colors shadow-sm">
+                    <i data-lucide="refresh-cw" id="refresh-icon" class="w-4 h-4"></i> Refresh
+                </button>
+            </div>
         </div>
 
         <div class="bg-white border-2 border-slate-100 rounded-3xl overflow-hidden shadow-sm">
@@ -47,11 +53,11 @@
     </main>
 </div>
 
-<!-- Edit Product Modal -->
+<!-- Product Modal (create + edit) -->
 <div id="edit-modal" class="hidden fixed inset-0 z-[100] bg-black/50 backdrop-blur-sm items-center justify-center p-4" onclick="if(event.target===this) closeEditModal()">
     <div class="bg-white rounded-3xl shadow-2xl w-full max-w-xl max-h-[90vh] overflow-y-auto custom-scrollbar">
         <div class="p-6 border-b-2 border-slate-100 flex items-center justify-between sticky top-0 bg-white z-10">
-            <h2 class="text-xl font-black text-navy">Edit Product</h2>
+            <h2 id="modal-title" class="text-xl font-black text-navy">Edit Product</h2>
             <button onclick="closeEditModal()" class="text-slate-400 hover:text-navy"><i data-lucide="x" class="w-6 h-6"></i></button>
         </div>
         <form id="edit-form" class="p-6 space-y-4" onsubmit="saveProduct(event)">
@@ -83,6 +89,13 @@
                 </div>
             </div>
 
+            <!-- Stock — only shown when creating a new product -->
+            <div id="stock-field" class="hidden">
+                <label class="text-xs font-black text-slate-400 uppercase tracking-widest">Initial Stock *</label>
+                <input id="e-stock" type="number" min="0" value="1" class="mt-1 w-full px-4 py-3 border-2 border-slate-200 rounded-xl font-bold focus:border-navy focus:outline-none">
+                <p class="text-xs text-slate-400 font-medium mt-1">You can adjust stock anytime from the inventory table.</p>
+            </div>
+
             <div>
                 <label class="text-xs font-black text-slate-400 uppercase tracking-widest">Description</label>
                 <textarea id="e-description" rows="3" class="mt-1 w-full px-4 py-3 border-2 border-slate-200 rounded-xl font-medium focus:border-navy focus:outline-none"></textarea>
@@ -102,7 +115,7 @@
 
             <div class="flex justify-end gap-3 pt-4 border-t-2 border-slate-100">
                 <button type="button" onclick="closeEditModal()" class="px-5 py-3 rounded-xl font-bold text-sm text-slate-500 hover:bg-slate-100 transition-colors">Cancel</button>
-                <button type="submit" class="px-5 py-3 rounded-xl font-bold text-sm bg-navy hover:bg-navy/90 text-white transition-colors shadow-sm">Save Changes</button>
+                <button id="modal-submit-btn" type="submit" class="px-5 py-3 rounded-xl font-bold text-sm bg-navy hover:bg-navy/90 text-white transition-colors shadow-sm">Save Changes</button>
             </div>
         </form>
     </div>
@@ -189,6 +202,23 @@ async function refreshInventory() {
     btn.disabled = false;
 }
 
+function openNewModal() {
+    document.getElementById('edit-form').reset();
+    document.getElementById('e-id').value       = '';
+    document.getElementById('e-stock').value    = '1';
+    document.getElementById('e-category').value = 'Tops';
+    document.getElementById('modal-title').textContent      = 'New Product';
+    document.getElementById('modal-submit-btn').textContent = 'Create Product';
+    document.getElementById('stock-field').classList.remove('hidden');
+    document.getElementById('img-preview-strip').classList.add('hidden');
+    document.getElementById('img-previews').innerHTML = '';
+    document.getElementById('edit-modal').classList.remove('hidden');
+    document.getElementById('edit-modal').classList.add('flex');
+    document.body.style.overflow = 'hidden';
+    lucide.createIcons();
+    document.getElementById('e-name').focus();
+}
+
 function openEditModal(id) {
     const p = (window._allProducts || []).find(x => x.id === id);
     if (!p) return;
@@ -198,6 +228,9 @@ function openEditModal(id) {
     document.getElementById('e-category').value    = p.category || 'Other';
     document.getElementById('e-description').value = p.description || '';
     document.getElementById('e-images').value      = (p.images || []).join('\n');
+    document.getElementById('modal-title').textContent      = 'Edit Product';
+    document.getElementById('modal-submit-btn').textContent = 'Save Changes';
+    document.getElementById('stock-field').classList.add('hidden');
     updatePreview();
     document.getElementById('edit-modal').classList.remove('hidden');
     document.getElementById('edit-modal').classList.add('flex');
@@ -218,7 +251,7 @@ document.addEventListener('keydown', e => {
 function updatePreview() {
     const urls = document.getElementById('e-images').value
         .split('\n').map(s => s.trim()).filter(Boolean);
-    const strip = document.getElementById('img-preview-strip');
+    const strip     = document.getElementById('img-preview-strip');
     const container = document.getElementById('img-previews');
     if (!urls.length) { strip.classList.add('hidden'); return; }
     strip.classList.remove('hidden');
@@ -233,7 +266,7 @@ document.addEventListener('input', e => {
 
 async function saveProduct(e) {
     e.preventDefault();
-    const id = parseInt(document.getElementById('e-id').value);
+    const id     = document.getElementById('e-id').value;
     const images = document.getElementById('e-images').value
         .split('\n').map(s => s.trim()).filter(Boolean);
     const payload = {
@@ -243,13 +276,23 @@ async function saveProduct(e) {
         description: document.getElementById('e-description').value.trim(),
         images,
     };
+    const btn = document.getElementById('modal-submit-btn');
+    btn.disabled = true;
     try {
-        await API.updateProduct(id, payload);
-        showToast('Product updated!', 'success');
+        if (id) {
+            await API.updateProduct(parseInt(id), payload);
+            showToast('Product updated!', 'success');
+        } else {
+            payload.stock = parseInt(document.getElementById('e-stock').value) || 0;
+            const res = await API.createProduct(payload);
+            showToast(`Product created! (ID #${res.id})`, 'success');
+        }
         closeEditModal();
         await loadInventory();
     } catch(err) {
         showToast(err.message, 'error');
+    } finally {
+        btn.disabled = false;
     }
 }
 </script>
