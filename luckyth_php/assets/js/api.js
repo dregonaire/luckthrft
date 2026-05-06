@@ -55,7 +55,8 @@ const API = {
     getProducts:   () => apiFetch('products'),
     updateStock:   (id, stock) => apiFetch(`products/${id}/stock`, 'PUT', { stock }),
     createProduct: (data) => apiFetch('products', 'POST', data),
-    updateProduct: (id, data) => apiFetch(`products/${id}`, 'PUT', data),
+    updateProduct:  (id, data) => apiFetch(`products/${id}`, 'PUT', data),
+    deleteProduct:  (id)       => apiFetch(`products/${id}`, 'DELETE'),
 
     // ── CART ──────────────────────────────────────────────────────────────────
     getCart:        () => apiFetch('cart'),

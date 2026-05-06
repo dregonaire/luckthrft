@@ -30,6 +30,7 @@ match(true) {
     $path === 'products'           && $method === 'GET'  => getProducts(),
     $path === 'products'           && $method === 'POST' => adminCreateProduct(),
     preg_match('#^products/(\d+)$#', $path, $m) && $method === 'PUT'    => adminUpdateProduct((int)$m[1]),
+    preg_match('#^products/(\d+)$#', $path, $m) && $method === 'DELETE' => adminDeleteProduct((int)$m[1]),
     preg_match('#^products/(\d+)/stock$#', $path, $m) && $method === 'PUT' => adminUpdateStock((int)$m[1]),
 
     // CART
@@ -289,6 +290,16 @@ function adminUpdateProduct(int $id): void {
            $body['category']    ?: 'Other',
            $id,
        ]);
+    jsonResponse(['success' => true]);
+}
+
+function adminDeleteProduct(int $id): void {
+    requireAdmin();
+    $db = getDB();
+    // Nullify order_items references so history is preserved
+    $db->prepare('UPDATE order_items SET product_id = NULL WHERE product_id = ?')->execute([$id]);
+    $db->prepare('DELETE FROM cart WHERE product_id = ?')->execute([$id]);
+    $db->prepare('DELETE FROM products WHERE id = ?')->execute([$id]);
     jsonResponse(['success' => true]);
 }
 

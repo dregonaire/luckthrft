@@ -170,10 +170,16 @@ async function loadInventory() {
                     </span>
                 </td>
                 <td class="px-6 py-4 text-right">
-                    <button onclick="openEditModal(${p.id})"
-                        class="text-xs font-bold bg-slate-100 hover:bg-navy hover:text-white px-3 py-2 rounded-xl transition-colors flex items-center gap-1 ml-auto">
-                        <i data-lucide="pencil" class="w-3.5 h-3.5"></i> Edit
-                    </button>
+                    <div class="flex items-center gap-2 justify-end">
+                        <button onclick="openEditModal(${p.id})"
+                            class="text-xs font-bold bg-slate-100 hover:bg-navy hover:text-white px-3 py-2 rounded-xl transition-colors flex items-center gap-1">
+                            <i data-lucide="pencil" class="w-3.5 h-3.5"></i> Edit
+                        </button>
+                        <button onclick="deleteProduct(${p.id}, '${p.name.replace(/'/g,"\\\'")}')"
+                            class="text-xs font-bold bg-slate-100 hover:bg-red-500 hover:text-white px-3 py-2 rounded-xl transition-colors flex items-center gap-1">
+                            <i data-lucide="trash-2" class="w-3.5 h-3.5"></i> Delete
+                        </button>
+                    </div>
                 </td>
             </tr>`).join('');
         lucide.createIcons();
@@ -200,6 +206,17 @@ async function refreshInventory() {
     await loadInventory();
     icon.style.animation = '';
     btn.disabled = false;
+}
+
+async function deleteProduct(id, name) {
+    if (!confirm(`Delete "${name}"?\n\nThis cannot be undone. Any existing orders for this product will keep their history.`)) return;
+    try {
+        await API.deleteProduct(id);
+        showToast(`"${name}" deleted.`, 'success');
+        await loadInventory();
+    } catch(err) {
+        showToast(err.message, 'error');
+    }
 }
 
 function openNewModal() {
