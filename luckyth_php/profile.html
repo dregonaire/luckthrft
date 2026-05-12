@@ -191,86 +191,37 @@
                 </div>
             </div>
 
-            <!-- 2. Notifications -->
+            <!-- 2. Default Delivery Address -->
             <div class="border-2 border-slate-100 rounded-2xl overflow-hidden">
-                <button type="button" data-settings-toggle="notif-panel"
+                <button type="button" data-settings-toggle="addr-panel"
                         class="settings-row w-full flex items-center justify-between p-4 sm:p-5 hover:bg-slate-50 transition text-left">
                     <span class="flex items-center gap-3">
                         <span class="w-10 h-10 rounded-xl bg-navy/5 flex items-center justify-center">
-                            <i data-lucide="bell" class="w-5 h-5 text-navy"></i>
+                            <i data-lucide="map-pin" class="w-5 h-5 text-navy"></i>
                         </span>
                         <span>
-                            <span class="block font-black text-navy">Notifications</span>
-                            <span class="block text-xs text-slate-400 font-medium">Choose what we let you know about</span>
+                            <span class="block font-black text-navy">Default Delivery Address</span>
+                            <span class="block text-xs text-slate-400 font-medium">Auto-filled when you place orders</span>
                         </span>
                     </span>
                     <i data-lucide="chevron-down" class="w-5 h-5 text-slate-400 settings-chevron transition-transform"></i>
                 </button>
-                <div id="notif-panel" class="hidden border-t border-slate-100 p-5 bg-slate-50/40 space-y-3">
-                    <label class="flex items-center justify-between gap-4 bg-white rounded-xl p-4 border border-slate-100">
-                        <span>
-                            <span class="block font-bold text-navy text-sm">Order updates</span>
-                            <span class="block text-xs text-slate-400">When your order is shipped or delivered</span>
-                        </span>
-                        <input type="checkbox" id="notif-orders" class="w-5 h-5 accent-orange">
-                    </label>
-                    <label class="flex items-center justify-between gap-4 bg-white rounded-xl p-4 border border-slate-100">
-                        <span>
-                            <span class="block font-bold text-navy text-sm">New arrivals</span>
-                            <span class="block text-xs text-slate-400">Be the first to know about fresh drops</span>
-                        </span>
-                        <input type="checkbox" id="notif-arrivals" class="w-5 h-5 accent-orange">
-                    </label>
-                    <label class="flex items-center justify-between gap-4 bg-white rounded-xl p-4 border border-slate-100">
-                        <span>
-                            <span class="block font-bold text-navy text-sm">Promotions &amp; deals</span>
-                            <span class="block text-xs text-slate-400">Occasional discounts and sale alerts</span>
-                        </span>
-                        <input type="checkbox" id="notif-promos" class="w-5 h-5 accent-orange">
-                    </label>
-                    <button type="button" id="save-notif-btn" class="w-full bg-navy text-white hover:bg-orange transition py-3 rounded-xl font-black flex items-center justify-center gap-2">
-                        <i data-lucide="check" class="w-5 h-5"></i> Save Preferences
-                    </button>
+                <div id="addr-panel" class="hidden border-t border-slate-100 p-5 bg-slate-50/40">
+                    <form id="addr-form" class="space-y-3">
+                        <label class="block">
+                            <span class="text-[11px] uppercase font-black text-slate-400 tracking-widest">Full Delivery Address</span>
+                            <textarea id="addr-value" rows="3" placeholder="Street, Barangay, City, Province"
+                                class="mt-1 w-full border-2 border-slate-200 focus:border-navy outline-none px-4 py-3 rounded-xl font-medium bg-white resize-none"></textarea>
+                        </label>
+                        <p class="text-xs text-slate-400 font-medium">This address will be pre-filled every time you go to checkout.</p>
+                        <button type="submit" class="w-full bg-navy text-white hover:bg-orange transition py-3 rounded-xl font-black flex items-center justify-center gap-2">
+                            <i data-lucide="check" class="w-5 h-5"></i> Save Address
+                        </button>
+                    </form>
                 </div>
             </div>
 
-            <!-- 3. Privacy -->
-            <div class="border-2 border-slate-100 rounded-2xl overflow-hidden">
-                <button type="button" data-settings-toggle="privacy-panel"
-                        class="settings-row w-full flex items-center justify-between p-4 sm:p-5 hover:bg-slate-50 transition text-left">
-                    <span class="flex items-center gap-3">
-                        <span class="w-10 h-10 rounded-xl bg-navy/5 flex items-center justify-center">
-                            <i data-lucide="shield" class="w-5 h-5 text-navy"></i>
-                        </span>
-                        <span>
-                            <span class="block font-black text-navy">Privacy</span>
-                            <span class="block text-xs text-slate-400 font-medium">Control how your information is used</span>
-                        </span>
-                    </span>
-                    <i data-lucide="chevron-down" class="w-5 h-5 text-slate-400 settings-chevron transition-transform"></i>
-                </button>
-                <div id="privacy-panel" class="hidden border-t border-slate-100 p-5 bg-slate-50/40 space-y-3">
-                    <label class="flex items-center justify-between gap-4 bg-white rounded-xl p-4 border border-slate-100">
-                        <span>
-                            <span class="block font-bold text-navy text-sm">Show my order history to support staff</span>
-                            <span class="block text-xs text-slate-400">Helps us assist you faster when you contact us</span>
-                        </span>
-                        <input type="checkbox" id="priv-history" class="w-5 h-5 accent-orange" checked>
-                    </label>
-                    <label class="flex items-center justify-between gap-4 bg-white rounded-xl p-4 border border-slate-100">
-                        <span>
-                            <span class="block font-bold text-navy text-sm">Save my address for faster checkout</span>
-                            <span class="block text-xs text-slate-400">Auto-fill your delivery details on next order</span>
-                        </span>
-                        <input type="checkbox" id="priv-saveaddr" class="w-5 h-5 accent-orange" checked>
-                    </label>
-                    <button type="button" id="save-privacy-btn" class="w-full bg-navy text-white hover:bg-orange transition py-3 rounded-xl font-black flex items-center justify-center gap-2">
-                        <i data-lucide="check" class="w-5 h-5"></i> Save Preferences
-                    </button>
-                </div>
-            </div>
-
-            <!-- 4. Sign Out -->
+            <!-- 3. Sign Out -->
             <button type="button" id="settings-signout"
                     class="settings-row w-full flex items-center justify-between p-4 sm:p-5 border-2 border-slate-100 rounded-2xl hover:bg-slate-50 transition text-left">
                 <span class="flex items-center gap-3">

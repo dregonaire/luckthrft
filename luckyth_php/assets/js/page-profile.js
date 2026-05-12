@@ -23,8 +23,7 @@ async function initProfile() {
     wireSettingsToggle();
     wireSettingsRows();
     wirePasswordChange();
-    wireNotificationPrefs();
-    wirePrivacyPrefs();
+    wireDefaultAddress();
     wireSignOut();
     wireDeleteAccount();
     wireAvatarUpload();
@@ -70,29 +69,18 @@ function wireSettingsRows() {
     });
 }
 
-function wireNotificationPrefs() {
-    const KEY = 'luckyth.notif';
-    const fields = ['notif-orders', 'notif-arrivals', 'notif-promos'];
-    const stored = JSON.parse(localStorage.getItem(KEY) || '{"notif-orders":true,"notif-arrivals":true,"notif-promos":false}');
-    fields.forEach(id => { const el = document.getElementById(id); if (el) el.checked = !!stored[id]; });
-    document.getElementById('save-notif-btn').onclick = () => {
-        const obj = {};
-        fields.forEach(id => obj[id] = document.getElementById(id).checked);
-        localStorage.setItem(KEY, JSON.stringify(obj));
-        Nav.toast?.('Notification preferences saved.', 'success');
-    };
-}
-
-function wirePrivacyPrefs() {
-    const KEY = 'luckyth.privacy';
-    const fields = ['priv-history', 'priv-saveaddr'];
-    const stored = JSON.parse(localStorage.getItem(KEY) || '{"priv-history":true,"priv-saveaddr":true}');
-    fields.forEach(id => { const el = document.getElementById(id); if (el) el.checked = !!stored[id]; });
-    document.getElementById('save-privacy-btn').onclick = () => {
-        const obj = {};
-        fields.forEach(id => obj[id] = document.getElementById(id).checked);
-        localStorage.setItem(KEY, JSON.stringify(obj));
-        Nav.toast?.('Privacy preferences saved.', 'success');
+function wireDefaultAddress() {
+    const KEY  = 'luckyth.defaultAddress';
+    const form = document.getElementById('addr-form');
+    const ta   = document.getElementById('addr-value');
+    if (!form || !ta) return;
+    ta.value = localStorage.getItem(KEY) || (currentProfile?.address || '');
+    form.onsubmit = (e) => {
+        e.preventDefault();
+        const val = ta.value.trim();
+        if (val) localStorage.setItem(KEY, val);
+        else localStorage.removeItem(KEY);
+        Nav.toast?.('Default address saved. It will auto-fill at checkout.', 'success');
     };
 }
 

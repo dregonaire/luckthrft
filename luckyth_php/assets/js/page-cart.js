@@ -193,9 +193,9 @@ const Checkout = {
             breakdown.classList.add('hidden');
         }
 
-        // Reset fields
+        // Reset fields — pre-fill saved default address if present
         document.getElementById('checkout-barangay').value = '';
-        document.getElementById('checkout-address').value  = '';
+        document.getElementById('checkout-address').value  = localStorage.getItem('luckyth.defaultAddress') || '';
         document.getElementById('checkout-ewallet-num').value = '';
         document.getElementById('ewallet-input').classList.add('hidden');
         document.querySelectorAll('.payment-option').forEach(opt => {
