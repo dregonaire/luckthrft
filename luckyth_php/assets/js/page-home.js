@@ -31,9 +31,9 @@ async function renderHome() {
 }
 
 function productCard(p) {
-    const img = p.images?.[0] || '';
+    const img = fixImgUrl(p.images?.[0] || '');
     return `
-    <a href="/products/product-${p.id}.html"
+    <a href="/products/product.html?id=${p.id}"
        class="snap-start shrink-0 w-[80%] sm:w-[45%] lg:w-[23%] bg-white rounded-[2rem] overflow-hidden border-2 border-slate-100 hover:border-orange transition-all duration-300 group block">
         <div class="aspect-[4/5] relative overflow-hidden bg-slate-100">
             <img src="${img}" alt="${p.name}" loading="lazy" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
