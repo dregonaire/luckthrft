@@ -202,7 +202,7 @@ function renderTable() {
     }
 
     tbody.innerHTML = rows.map(a => {
-        const img     = a.images?.[0] || '';
+        const img     = fixImgUrl(a.images?.[0] || '');
         const current = a.current_bid !== null ? `₱${a.current_bid}` : '<span class="text-slate-300">No bids</span>';
         const timeWin = `<div class="text-xs"><div><span class="text-slate-400">Starts:</span> ${fmtTime(a.start_time)}</div><div><span class="text-slate-400">Ends:</span> ${fmtTime(a.end_time)}</div></div>`;
         const winnerCol = a.status === 'ended'

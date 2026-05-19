@@ -59,7 +59,7 @@ function renderDetail(a) {
 
     document.getElementById('thumbnails').innerHTML = imgs.length > 1 ? imgs.map((src, i) =>
         `<button onclick="setImg(${i})" class="shrink-0 w-16 h-16 rounded-xl overflow-hidden border-2 transition-colors ${i === _imgIndex ? 'border-orange' : 'border-slate-100 hover:border-slate-300'}">
-            <img src="${src}" alt="" class="w-full h-full object-cover">
+            <img src="${fixImgUrl(src)}" alt="" class="w-full h-full object-cover">
          </button>`
     ).join('') : '';
 
@@ -276,7 +276,7 @@ function startTimer(target) {
 function setImg(i) {
     const imgs = _auction?.images || [];
     _imgIndex  = Math.max(0, Math.min(i, imgs.length - 1));
-    document.getElementById('main-img').src = imgs[_imgIndex] || '';
+    document.getElementById('main-img').src = fixImgUrl(imgs[_imgIndex] || '');
     if (imgs.length > 1)
         document.getElementById('img-counter').textContent = `${_imgIndex + 1} / ${imgs.length}`;
     document.querySelectorAll('#thumbnails button').forEach((b, idx) => {

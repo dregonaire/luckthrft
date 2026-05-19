@@ -54,7 +54,7 @@ function renderSection(type, auctions, sectionSel, gridSel) {
 }
 
 function auctionCard(a, type) {
-    const img = a.images?.[0] || '';
+    const img = fixImgUrl(a.images?.[0] || '');
 
     let badge = '';
     if (type === 'live')
